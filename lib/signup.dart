@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
+import 'package:http/http.dart' as http;
 
 class SignupRoute extends StatelessWidget {
   SignupRoute({Key? key}) : super(key: key);
@@ -7,7 +8,6 @@ class SignupRoute extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController fnameController = TextEditingController();
   final TextEditingController lnameController = TextEditingController();
-
   final TextEditingController addressController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
@@ -20,7 +20,8 @@ class SignupRoute extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(20.0),
-          child: Column(
+          child: SingleChildScrollView(
+            child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text('Create New Account'),
@@ -96,7 +97,7 @@ class SignupRoute extends StatelessWidget {
                 ),
               )
             ],
-          ),
+          ),),
         ),
       ),
     );
