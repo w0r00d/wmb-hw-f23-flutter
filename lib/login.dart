@@ -13,16 +13,18 @@ class LoginRoute extends StatelessWidget {
 
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
 // Save token
-// Future<void> saveToken(String token) async {
-//   final prefs = await SharedPreferences.getInstance();
-//   await prefs.setString('token', token);
-// }
-// Save token
-Future<void> saveToken(String token) async {
-  final storage = FlutterSecureStorage();
-  await storage.write(key: 'token', value: token);
-}
+  Future<void> saveToken(String token) async {
+    final storage = FlutterSecureStorage();
+    await storage.write(key: 'token', value: token);
+    
+  }
+    Future<void> saveAdminStat( int is_admin) async {
+    final storage = FlutterSecureStorage();
+    
+    await storage.write(key: 'is_admin', value: is_admin.toString());
+  }
 
   login() async {
     print('loggin in................');
@@ -35,20 +37,20 @@ Future<void> saveToken(String token) async {
         'password': passwordController.text
       }),
       headers: {
-          'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
-     
     );
     print('--------------------------------------------');
     print(response.body);
 
-    
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body);
-      return {'token': jsonData['token']};
-    } else
-      {var jsonData = jsonDecode(response.body);
-      return {'error': jsonData['message']};}
+      return {'token': jsonData['token'],
+       'is_admin': jsonData['is_admin']};
+    } else {
+      var jsonData = jsonDecode(response.body);
+      return {'error': jsonData['message']};
+    }
   }
 
   @override
@@ -99,13 +101,13 @@ Future<void> saveToken(String token) async {
                         content: Text('Wrong Credentials. Please try again.'),
                         duration:
                             Duration(seconds: 2), // Adjust duration as needed
-                            backgroundColor: Colors.red,
+                        backgroundColor: Colors.red,
                       ),
                     );
-                  }
-                  else {
-                     print('Token: ${result['token']}');
-                     saveToken(result['token']);
+                  } else {
+                    print('Token: ${result['token']}');
+                    saveToken(result['token']);
+                    saveAdminStat(result['is_admin']);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -113,13 +115,13 @@ Future<void> saveToken(String token) async {
                         builder: (context) => SongListScreen(),
                       ),
                     );
-                  }  
+                  }
                 },
                 child: Text('Login'),
               ),
               Center(
-                child: GestureDetector(
-                  onTap: () {
+                child: ElevatedButton(
+                  onPressed: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(

@@ -1,34 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-// Future<String?> getToken() async {
-//   final prefs = await SharedPreferences.getInstance();
-//   return prefs.getString('token');
-// }
-// Retrieve token
+import 'package:hw/artist.dart';
+import 'add_songs.dart';
+import 'login.dart';
+import 'SongDetailsScreen.dart';
+import 'SearchSongs.dart';
 Future<String?> getToken() async {
   final storage = FlutterSecureStorage();
   return await storage.read(key: 'token');
 }
-/*
-void main() {
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Song List',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: SongListScreen(),
-    );
-  }
-}*/
+Future<String?> getAdminStat() async {
+  final storage = FlutterSecureStorage();
+  return await storage.read(key: 'is_admin');
+}
 
 class SongListScreen extends StatefulWidget {
   @override
@@ -37,14 +24,28 @@ class SongListScreen extends StatefulWidget {
 
 class _SongListScreenState extends State<SongListScreen> {
   List<dynamic> _songs = [];
+  bool _isLoading = false;
 
   @override
-  void initState() async{
-    final tok = await getToken();
-    print('tooooooken');
-    print(tok);
+  void initState() {
     super.initState();
-    _fetchSongs();
+    _checkTokenAndFetchSongs();
+  }
+
+  Future<void> _checkTokenAndFetchSongs() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final token = await getToken();
+    final is_admin = await getAdminStat();
+    if (token != null) {
+      await _fetchSongs();
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   Future<void> _fetchSongs() async {
@@ -66,99 +67,118 @@ class _SongListScreenState extends State<SongListScreen> {
       appBar: AppBar(
         title: Text('Song List'),
       ),
-      body: _songs.isEmpty
+      body: _isLoading
           ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: _songs.length,
-              itemBuilder: (context, index) {
-                final song = _songs[index];
-                return Card(
-                  margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  elevation: 4.0,
-                  child: ListTile(
-                    contentPadding: EdgeInsets.all(16.0),
-                    title: Text(
-                      song['Title'] ?? 'Unknown Title',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(
-                      'Artist: ${song['artist'] != null ? '${song['artist']['fname']} ${song['artist']['lname']}' : 'Unknown'}',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                    onTap: () {
-                     // final tok = await getToken();
-                   //   print(tok);
-                     // print('tooooooooooooooooo00000000ken');
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SongDetailScreen(song: song),
+          : _songs.isEmpty
+              ? _buildTokenNotFoundMessage(context)
+              : Center(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SongSearchPage(),
+                                  ),
+                                );
+                              },
+                              child: Text('Search for song'),
+                            ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ArtistListScreen(),
+                                  ),
+                                );
+                              },
+                              child: Text('Go to Artists'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AddSongs(),
+                                  ),
+                                );
+                              },
+                              child: Text('Add Song'),
+                            ),
+                          
+                          ],
                         ),
-                      );
-                    },
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.6,
+                          child: ListView.builder(
+                            itemCount: _songs.length,
+                            itemBuilder: (context, index) {
+                              final song = _songs[index];
+                              return Card(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 8.0),
+                                elevation: 4.0,
+                                child: ListTile(
+                                  contentPadding: EdgeInsets.all(16.0),
+                                  title: Text(
+                                    song['Title'] ?? 'Unknown Title',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Text(
+                                    'Artist: ${song['artist'] != null ? '${song['artist']['fname']} ${song['artist']['lname']}' : 'Unknown'}',
+                                    style: TextStyle(color: Colors.grey[600]),
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            SongDetailScreen(song: song),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                );
-              },
-            ),
+                ),
     );
   }
-}
-class SongDetailScreen extends StatelessWidget {
-  final dynamic song;
 
-  SongDetailScreen({required this.song});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Song Detail'),
+  Widget _buildTokenNotFoundMessage(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'You are not authenticated.',
+            style: TextStyle(fontSize: 18.0),
+          ),
+          SizedBox(height: 16.0),
+          ElevatedButton(
+            onPressed: () {
+              // Navigate to the login page
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginRoute(),
+                  ));
+            },
+            child: Text('Login'),
+          ),
+        ],
       ),
-      body: song != null
-          ? Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    song['Title'] ?? 'Unknown Title',
-                    style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 16.0),
-                  Text(
-                    'Type:',
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    song['Type'] ?? 'Unknown Type',
-                    style: TextStyle(fontSize: 18.0, color: Colors.grey[800]),
-                  ),
-                  SizedBox(height: 12.0),
-                  Text(
-                    'Price:',
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    '\$${song['Price'] ?? 'Unknown Price'}',
-                    style: TextStyle(fontSize: 18.0, color: Colors.grey[800]),
-                  ),
-                  SizedBox(height: 12.0),
-                  Text(
-                    'Artist:',
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    song['artist'] != null
-                        ? '${song['artist']['fname']} ${song['artist']['lname']}'
-                        : 'Unknown Artist',
-                    style: TextStyle(fontSize: 18.0, color: Colors.grey[800]),
-                  ),
-                ],
-              ),
-            )
-          : Center(
-              child: Text('Song details not available'),
-            ),
     );
   }
 }

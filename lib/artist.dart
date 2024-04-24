@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:hw/songs.dart';
+import 'add_artist.dart';
+import 'SearchArtist.dart';
 class ArtistListScreen extends StatefulWidget {
   @override
   _ArtistListScreenState createState() => _ArtistListScreenState();
@@ -17,8 +19,8 @@ class _ArtistListScreenState extends State<ArtistListScreen> {
   }
 
   Future<void> _fetchArtists() async {
-    final response = await http.get(
-        Uri.parse('https://woroodmadwar.com/mws_wmb_f23_hw/public/api/artists'));
+    final response = await http.get(Uri.parse(
+        'https://woroodmadwar.com/mws_wmb_f23_hw/public/api/artists'));
     if (response.statusCode == 200) {
       final jsonData = jsonDecode(response.body);
       setState(() {
@@ -32,43 +34,89 @@ class _ArtistListScreenState extends State<ArtistListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Artist List'),
-      ),
-      body: _artists.isEmpty
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: _artists.length,
-              itemBuilder: (context, index) {
-                final artist = _artists[index];
-                return Card(
-                  margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  elevation: 4.0,
-                  child: ListTile(
-                    contentPadding: EdgeInsets.all(16.0),
-                    title: Text(
-                      '${artist['fname']} ${artist['lname']}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(
-                      'Gender: ${artist['gender'] ?? 'Unknown'}',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ArtistDetailScreen(artist: artist),
-                        ),
-                      );
-                    },
+        appBar: AppBar(
+          title: Text('Artist List'),
+        ),
+        body: _artists.isEmpty
+            ? Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  ElevatedButton(onPressed: (){
+
+                     Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchArtist(),
+                            ),
+                          );
+                  }, child: Text('Search Artists')),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SongListScreen(),
+                            ),
+                          );
+                        },
+                        child: Text('Go to Songs'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddArtist(),
+                            ),
+                          );
+                        },
+                        child: Text('Add Artist'),
+                      ),
+                    ],
                   ),
-                );
-              },
-            ),
-    );
+                  
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: ListView.builder(
+                      itemCount: _artists.length,
+                      itemBuilder: (context, index) {
+                        final artist = _artists[index];
+                        return Card(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 8.0),
+                          elevation: 4.0,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.all(16.0),
+                            title: Text(
+                              '${artist['fname']} ${artist['lname']}',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(
+                              'Gender: ${artist['gender'] ?? 'Unknown'}',
+                              style: TextStyle(color: Colors.grey[600]),
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ArtistDetailScreen(artist: artist),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ));
   }
 }
+
 class ArtistDetailScreen extends StatelessWidget {
   final dynamic artist;
 
