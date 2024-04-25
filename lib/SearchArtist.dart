@@ -10,7 +10,10 @@ class SearchArtist extends StatefulWidget {
 
 class _SearchArtistState extends State<SearchArtist> {
   List<dynamic> _artists = [];
-  TextEditingController _searchController = TextEditingController();
+    List<Artist> artists = [];
+  List<dynamic> _resArtists = [];
+  List<Artist> fetchedArtists = [];
+    TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -28,22 +31,59 @@ class _SearchArtistState extends State<SearchArtist> {
       });
       print('=================================');
       print(_artists);
+      //artists = _artists.map((json)=>Artist.fromJson(json)).toList();
+      
+      print('ssssssssssssssssssssssssssssssssssssssssssssss');
+  
+    //artists = _artists.map((json)=>Artist.fromJson(json)).toList();
+    /*
+      fetchedArtists = _artists.map((json) {
+      return Artist(
+        id: json['id'],
+        fname: json['fname'],
+        lname: json['lname'],
+        gender: json['gender'],
+        country: json['country'],
+        // You may need to adjust this part depending on the structure of your data
+        songs: (json['songs'] as List<dynamic>).map((songJson) {
+          return Song(
+            id:songJson['id'],
+            title: songJson['title'],
+            type: songJson['type'],
+            price: songJson['price']);
+        }).toList(),
+      );
+    }).toList();
+  */
+    artists = _artists.map((json)=>Artist.fromJson(json)).toList() ;
+          print(artists);
+          for(var a in artists){
+            print(a.songs);
+          }
     } else {
       throw Exception('Failed to load artists');
     }
   }
 
   List<dynamic> _searchArtists() {
-    print(_artists.length);
+   
     print('=========================');
-    List res = _artists.where((artist) {
-      final artistFName = artist['fname'].toString().toLowerCase();
-      final artistLName = artist['lname'].toString().toLowerCase();
+
+  
+
+
+    List<dynamic> res = artists.where((artist){
+      final artistFName = artist.lname.toString().toLowerCase();
+      final artistLName = artist.fname.toString().toLowerCase();
       return artistLName.contains( _searchController.text.toLowerCase())||artistFName.contains( _searchController.text.toLowerCase()) ;
     }).toList();
+
 setState(() {
-  _artists = res;
+  _resArtists = res;
+  
 });
+
+print(_resArtists);
     return res;
   }
 
@@ -63,9 +103,7 @@ setState(() {
                 labelText: 'Search Artist',
                 border: OutlineInputBorder(),
               ),
-              onChanged: (value) {
-                setState(() {});
-              },
+           
             ),
           ),
           ElevatedButton(
@@ -75,26 +113,18 @@ setState(() {
             child: Text('search'),
           ),
           Expanded(
-            child: _artists.isNotEmpty
+            child: _resArtists.isNotEmpty
                 ? ListView.builder(
-                    itemCount: _artists.length,
+                    itemCount: _resArtists.length,
                     itemBuilder: (context, index) {
-                      Artist artist = _artists[index];
-                      return Card(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 8.0),
-                        elevation: 4.0,
-                        child: ListTile(
-                          contentPadding: EdgeInsets.all(16.0),
-                          title: Text('_',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(
-                            'Artist: ${'${artist.fname} ${artist.lname}'}',
-                            style: TextStyle(color: Colors.grey[600]),
-                          ),
-                      
-                        ),
+                      Artist artist = _resArtists[index];
+                      return ListTile(
+                        title: Text('Artist Name: '+artist.fname+' '+artist.lname)
+                        ,subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children:[ 
+                            Text(artist.songs!.join(('\n')))
+                          ],),
                       );
                     })
                 : Text('no results'),

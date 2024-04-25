@@ -7,6 +7,7 @@ import 'add_songs.dart';
 import 'login.dart';
 import 'SongDetailsScreen.dart';
 import 'SearchSongs.dart';
+
 Future<String?> getToken() async {
   final storage = FlutterSecureStorage();
   return await storage.read(key: 'token');
@@ -75,17 +76,17 @@ class _SongListScreenState extends State<SongListScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                          ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SongSearchPage(),
-                                  ),
-                                );
-                              },
-                              child: Text('Search for song'),
-                            ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SongSearchPage(),
+                              ),
+                            );
+                          },
+                          child: Text('Search for song'),
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -111,7 +112,6 @@ class _SongListScreenState extends State<SongListScreen> {
                               },
                               child: Text('Add Song'),
                             ),
-                          
                           ],
                         ),
                         Container(

@@ -112,10 +112,11 @@ class _SongSearchPageState extends State<SongSearchPage> {
                             song.title ?? 'Unknown Title',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          subtitle: Text(
-                            'Artist: ${'${song.artist.fname} ${song.artist.lname}'}',
+                          subtitle: song.artist != null ? Text(
+                            'Artist: ${ '${song.artist?.fname} ${song.artist?.lname}'}',
                             style: TextStyle(color: Colors.grey[600]),
-                          ),
+                          ) : 
+                          Text(''),
                           onTap: () {
                             Navigator.push(
                               context,

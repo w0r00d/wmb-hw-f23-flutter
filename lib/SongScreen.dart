@@ -52,9 +52,7 @@ class SongScreen extends StatelessWidget {
                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    song.artist != null
-                        ? '${song.artist.fname} ${song.artist.lname}'
-                        : 'Unknown Artist',
+                      song.artist != null ? '${song.artist?.fname} ${song.artist?.lname ?? ''}' : 'Unknown Artist',
                     style: TextStyle(fontSize: 18.0, color: Colors.grey[800]),
                   ),
                 ],

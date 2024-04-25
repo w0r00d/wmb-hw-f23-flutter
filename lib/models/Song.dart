@@ -5,11 +5,11 @@ class Song{
   final String title;
   final String type;
   final String price;
-  final int artist_id; 
-  final Artist artist;
+  final int? artist_id; 
+  final Artist? artist;
 
 
-Song({required this.id, required this.title, required this.type, required this.price, required this.artist_id,required this.artist});
+Song({required this.id, required this.title, required this.type, required this.price,  this.artist_id, this.artist});
 
  factory Song.fromJson(Map<String, dynamic> json) {
     return Song(

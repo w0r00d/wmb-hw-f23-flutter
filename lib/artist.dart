@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:hw/songs.dart';
 import 'add_artist.dart';
 import 'SearchArtist.dart';
+
 class ArtistListScreen extends StatefulWidget {
   @override
   _ArtistListScreenState createState() => _ArtistListScreenState();
@@ -34,22 +35,24 @@ class _ArtistListScreenState extends State<ArtistListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Artist List'),
-        ),
-        body: _artists.isEmpty
-            ? Center(child: CircularProgressIndicator())
-            : Column(
+      appBar: AppBar(
+        title: Text('Artist List'),
+      ),
+      body: _artists.isEmpty
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
                 children: [
-                  ElevatedButton(onPressed: (){
-
-                     Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SearchArtist(),
-                            ),
-                          );
-                  }, child: Text('Search Artists')),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SearchArtist(),
+                          ),
+                        );
+                      },
+                      child: Text('Search Artists')),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -77,7 +80,6 @@ class _ArtistListScreenState extends State<ArtistListScreen> {
                       ),
                     ],
                   ),
-                  
                   Container(
                     height: MediaQuery.of(context).size.height * 0.6,
                     child: ListView.builder(
@@ -113,7 +115,9 @@ class _ArtistListScreenState extends State<ArtistListScreen> {
                     ),
                   ),
                 ],
-              ));
+              ),
+            ),
+    );
   }
 }
 
