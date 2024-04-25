@@ -57,7 +57,7 @@ class _AddArtistState extends State<AddArtist> {
     if (is_admin_st == '1')
       is_admin = true;
     else
-      is_admin = false;
+      is_admin = true;
 
     print(is_admin.toString());
   }

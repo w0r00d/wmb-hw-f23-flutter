@@ -28,6 +28,7 @@ class _AddSongs_state extends State<AddSongs> {
 
   Future fetching() async {
     await _fetchArtists();
+    
      String? is_admin_st = await getAdminStat();
      if(is_admin_st=='1')
       is_admin =true;

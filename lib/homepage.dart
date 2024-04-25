@@ -6,6 +6,7 @@ import 'SearchArtist.dart';
 import 'SearchSongs.dart';
 import 'purchase.dart';
 import 'InvoicePage.dart';
+
 class homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -63,23 +64,22 @@ class homepage extends StatelessWidget {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  (
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => InvoicePage(),
-                    )
-                  );
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => InvoicePage(),
+                      ));
                 },
                 child: Text('My Purchases'),
               ),
                   ElevatedButton(
                 onPressed: () {
-                  (
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PurchasePage(),
-                    )
-                  );
+                  
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PurchasePage(),
+                      ));
                 },
                 child: Text('Purchase songs'),
               ),

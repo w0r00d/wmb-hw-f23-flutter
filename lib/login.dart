@@ -21,6 +21,7 @@ class LoginRoute extends StatelessWidget {
     await storage.write(key: 'token', value: token);
     
   }
+  //save is_admin
     Future<void> saveAdminStat( int is_admin) async {
     final storage = FlutterSecureStorage();
     

@@ -31,30 +31,8 @@ class _SearchArtistState extends State<SearchArtist> {
       });
       print('=================================');
       print(_artists);
-      //artists = _artists.map((json)=>Artist.fromJson(json)).toList();
-      
-      print('ssssssssssssssssssssssssssssssssssssssssssssss');
+    
   
-    //artists = _artists.map((json)=>Artist.fromJson(json)).toList();
-    /*
-      fetchedArtists = _artists.map((json) {
-      return Artist(
-        id: json['id'],
-        fname: json['fname'],
-        lname: json['lname'],
-        gender: json['gender'],
-        country: json['country'],
-        // You may need to adjust this part depending on the structure of your data
-        songs: (json['songs'] as List<dynamic>).map((songJson) {
-          return Song(
-            id:songJson['id'],
-            title: songJson['title'],
-            type: songJson['type'],
-            price: songJson['price']);
-        }).toList(),
-      );
-    }).toList();
-  */
     artists = _artists.map((json)=>Artist.fromJson(json)).toList() ;
           print(artists);
           for(var a in artists){
@@ -78,10 +56,10 @@ class _SearchArtistState extends State<SearchArtist> {
       return artistLName.contains( _searchController.text.toLowerCase())||artistFName.contains( _searchController.text.toLowerCase()) ;
     }).toList();
 
-setState(() {
-  _resArtists = res;
-  
-});
+    setState(() {
+      _resArtists = res;
+      
+    });
 
 print(_resArtists);
     return res;

@@ -15,6 +15,8 @@ class _SongSearchPageState extends State<SongSearchPage> {
   TextEditingController SearchTermController = TextEditingController();
   List<Song> songs = [];
   List<Song> resSongs = [];
+
+
   @override
   void initState() {
     getSongs();
@@ -24,9 +26,8 @@ class _SongSearchPageState extends State<SongSearchPage> {
   getSongs() async {
     await _fetchSongs();
   }
-
   Future<void> _fetchSongs() async {
-    print('feeeeeeeeeeeeeeeeeeeeeeeeeeeeeen');
+   
     final response = await http.get(
         Uri.parse('https://woroodmadwar.com/mws_wmb_f23_hw/public/api/songs'));
     if (response.statusCode == 200) {
@@ -35,19 +36,17 @@ class _SongSearchPageState extends State<SongSearchPage> {
         _songs = jsonData['data'];
       });
       _songs = jsonData['data'];
-
-  
+ 
 
       songs = _songs.map((json) => Song.fromJson(json)).toList();
-
+  //print(' songs');
     } else {
       throw Exception('Failed to load songs');
     }
   }
 
   Search() {
- 
-    var res = songs
+     var res = songs
         .where((song) => song.title
             .toLowerCase()
             .contains(SearchTermController.text.toLowerCase()))

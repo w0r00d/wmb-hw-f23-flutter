@@ -4,11 +4,13 @@ import 'login.dart';
 import 'add_songs.dart';
 import 'SearchArtist.dart';
 import 'purchase.dart';
+import 'homepage.dart';
 void main() {
   runApp( MaterialApp(
     //home: AddSongs(),
-   //home: LoginRoute(),
+   home: LoginRoute(),
  //  home: ArtistListScreen(),
- home: PurchasePage(),
+    //home: PurchasePage()
+ //home: homepage()
   ));
 }
