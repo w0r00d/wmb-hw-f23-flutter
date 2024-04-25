@@ -18,7 +18,7 @@ class _PurchasePageState extends State<PurchasePage> {
 
   @override
   void initState() {
-    super.initState();
+    super.initState();  
    fetching();
   }
 fetching () async{

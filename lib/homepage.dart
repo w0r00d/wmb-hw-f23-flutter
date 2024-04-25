@@ -4,7 +4,8 @@ import 'SongScreen.dart';
 import 'artist.dart';
 import 'SearchArtist.dart';
 import 'SearchSongs.dart';
-
+import 'purchase.dart';
+import 'InvoicePage.dart';
 class homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -26,8 +27,8 @@ class homepage extends StatelessWidget {
                 },
                 child: Text('View Songs'),
               ),
-              SizedBox(height:20),
-                ElevatedButton(
+              SizedBox(height: 20),
+              ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                       context,
@@ -37,7 +38,8 @@ class homepage extends StatelessWidget {
                 },
                 child: Text('View Artists'),
               ),
-              SizedBox(height:20),  ElevatedButton(
+              SizedBox(height: 20),
+              ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                       context,
@@ -45,10 +47,10 @@ class homepage extends StatelessWidget {
                         builder: (context) => SearchArtist(),
                       ));
                 },
-                child: Text('View Songs'),
+                child: Text('Search Songs'),
               ),
-              SizedBox(height:20),
-                ElevatedButton(
+              SizedBox(height: 20),
+              ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                       context,
@@ -56,10 +58,31 @@ class homepage extends StatelessWidget {
                         builder: (context) => SongSearchPage(),
                       ));
                 },
-                child: Text('View Songs'),
+                child: Text('Search Artists'),
               ),
-              SizedBox(height:20),
-
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  (
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => InvoicePage(),
+                    )
+                  );
+                },
+                child: Text('My Purchases'),
+              ),
+                  ElevatedButton(
+                onPressed: () {
+                  (
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PurchasePage(),
+                    )
+                  );
+                },
+                child: Text('Purchase songs'),
+              ),
             ],
           ),
         ),

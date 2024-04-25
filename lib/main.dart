@@ -7,7 +7,7 @@ import 'purchase.dart';
 void main() {
   runApp( MaterialApp(
     //home: AddSongs(),
-  // home: LoginRoute(),
+   //home: LoginRoute(),
  //  home: ArtistListScreen(),
  home: PurchasePage(),
   ));
